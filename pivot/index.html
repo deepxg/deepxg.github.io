@@ -1,28 +1,32 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>PATCH Pivot</title>
-        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
-        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
-        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-csv/0.71/jquery.csv-0.71.min.js"></script>
+<head>
+    <title>PATCH Pivot</title>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
 
-        <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/pivottable/2.0.2/pivot.min.css">
-        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pivottable/2.0.2/pivot.min.js"></script>
-    </head>
-    <body>
-        <script type="text/javascript">
-    $(function(){
-        $.getJSON("https://api.github.com/repos/deepxg/deepxg-data/contents/patch/2015/english-premier-league.csv", function(data) {
-	    var csv = atob(data.content);
-            var input = $.csv.toArrays(csv);
-            $("#output").pivotUI(input, {
-
-            });
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/pivottable/2.0.2/pivot.min.css">
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pivottable/2.0.2/pivot.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/4.1.2/papaparse.min.js"></script>
+</head>
+<body>
+    <script type="text/javascript">
+        Papa.parse("https://raw.githubusercontent.com/deepxg/deepxg-data/master/patch/2015/english-premier-league.csv", {
+            download: true,
+            dynamicTyping: true,
+            complete: function (results) {
+                $('#pgrid').pivotUI(results.data, {
+                    rows: ["Team", "Player"],
+                    cols: ["Opponent"],
+                    vals: ["PATCH"],
+                    aggregatorName: "Average",
+                    rendererName: "Heatmap"
+                });
+            }
         });
-    });
-        </script>
 
-    <div id="output" style="margin: 30px;"></div>
+    </script>
 
-    </body>
+    <div id="pgrid"></div>
+</body>
 </html>
